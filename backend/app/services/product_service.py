@@ -7,11 +7,11 @@ from fastapi import HTTPException, status
 
 class ProductService:
     def __init__(self, db: Session):
-        self.prodict_repository = ProductRepository(db)
+        self.product_repository = ProductRepository(db)
         self.category_repository = CategoryRepository(db)
        
     def get_all_products(self) -> ProductListResponse:
-        products = self.prodict_repository.get_all()
+        products = self.product_repository.get_all()
         product_response = [ProductResponse.model_validate(prod) for prod in products]
         return ProductListResponse(products=product_response, total=len(product_response))
         
@@ -33,8 +33,8 @@ class ProductService:
             )
         
         products = self.product_repository.get_by_category(category_id)
-        products_responce = [ProductResponse.model_validate(prod) for prod in products]
-        return ProductListResponse(products=products_responce, total=len(products_responce))
+        products_response = [ProductResponse.model_validate(prod) for prod in products]
+        return ProductListResponse(products=products_response, total=len(products_responce))
     
     def create_product(self, product_data: ProductCreate) -> ProductResponse:
         category = self.category_repository.get_by_id(product_data.category_id)
@@ -43,5 +43,5 @@ class ProductService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f'Category with id {product_data.category_id} not found'
             )
-        product = self.prodict_repository.create(product_data)
+        product = self.product_repository.create(product_data)
         return ProductResponse.model_validate(product)

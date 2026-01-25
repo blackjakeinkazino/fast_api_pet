@@ -8,7 +8,7 @@ from fastapi import HTTPException, status
 
 class CartService:
     def __init__(self, db: Session):
-        self.product_repository = ProductRepository
+        self.product_repository = ProductRepository(db)
 
     def add_to_cart(self, cart_data: Dict[int, int], item: CartItemCreate) -> Dict[int, int]:
         product = self.product_repository.get_by_id(item.product_id)

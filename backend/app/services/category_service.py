@@ -7,10 +7,11 @@ from fastapi import HTTPException, status
 
 class CategoryService:
     def __init__(self, db: Session):
-        self.repository = CategoryResponse(db)
+        self.repository = CategoryRepository(db)
         
     def get_all_categories(self) -> List[CategoryResponse]:
         categories = self.repository.get_all()
+        return [CategoryResponse.model_validate(cat) for cat in categories]
         
     def get_category_by_id(self, category_id: int) -> CategoryResponse:
         category = self.repository.get_by_id(category_id)
